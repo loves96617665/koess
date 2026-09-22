@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影片生成站</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 影片生成站</h1>
+            <p>輸入文字描述，生成影片</p>
+        </header>
+
+        <main>
+            <form id="videoForm" class="video-form">
+                <div class="form-group">
+                    <label for="prompt">影片描述 <span class="required">*</span></label>
+                    <textarea id="prompt" name="prompt" rows="4" placeholder="請描述你想要的影片內容，例如：一位科學家在實驗室發現新能源..."
+                        required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="model">選擇模型</label>
+                        <select id="model" name="model">
+                            <option value="kling-v1">Kling-AIGC (標準版)</option>
+                            <option value="seedance">Seedance 1.5</option>
+                            <option value="openai-sora">OpenAI Sora (概念稿)</option>
+                            <option value="custom">自定義模型...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">影片時長 (秒)</label>
+                        <input type="number" id="duration" name="duration" min="2" max="30" value="8">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resolution">解析度</label>
+                        <select id="resolution" name="resolution">
+                            <option value="720p">720p (1280x720)</option>
+                            <option value="1080p" selected>1080p (1920x1080)</option>
+                            <option value="4k">4K (3840x2160)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fps">幀率</label>
+                        <select id="fps" name="fps">
+                            <option value="24">24 FPS</option>
+                            <option value="30" selected>30 FPS</option>
+                            <option value="60">60 FPS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="style">風格 (可選)</label>
+                    <select id="style" name="style">
+                        <option value="">不指定風格</option>
+                        <option value="cinematic">電影風格</option>
+                        <option value="anime">動漫風格</option>
+                        <option value="realistic">寫實風格</option>
+                        <option value="illustration">插畫風格</option>
+                        <option value="cyberpunk">賽博朋克</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="api-key">API 金鑰 (可選)</label>
+                    <input type="text" id="api-key" name="api-key" placeholder="如果使用自訂 API，請填寫金鑰">
+                </div>
+
+                <button type="submit" id="generateBtn">
+                    <span id="btnText">生成影片</span>
+                    <span id="loading" style="display:none;">正在生成中...</span>
+                </button>
+            </form>
+
+            <div id="result" class="result" style="display:none;">
+                <h2>生成結果</h2>
+                <div id="videoContainer"></div>
+                <button id="downloadBtn">下載影片</button>
+            </div>
+
+            <div id="history" class="history">
+                <h2>歷史生成紀錄</h2>
+                <div id="historyList"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{
+    "name": "video-generator-site",
+    "version": "1.0.0",
+    "description": "影片生成站 - 支援 API 輸出",
+    "main": "app.js",
+    "scripts": {
+        "dev": "wrangler dev",
+        "build": "echo 'No build step required for static site'",
+        "deploy": "wrangler deploy",
+        "preview": "wrangler dev"
+    },
+    "keywords": [
+        "video",
+        "generator",
+        "ai",
+        "text-to-video"
+    ],
+    "author": "",
+    "license": "MIT"
+}
