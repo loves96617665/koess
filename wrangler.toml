@@ -1,17 +1,15 @@
 name = "video-generator-site"
 compatibility_date = "2024-01-01"
 
-# 為 Cloudflare Pages 設定
+# Cloudflare Pages 配置
 pages_build_output_dir = "public"
 
-# 如果需要 Workers API 代理，也可以配置
-# [[routes]]
-# pattern = "api.yourdomain.com/*"
-# script = "video-generator-site"
+# 如果需要 Workers API 代理
+# main = "functions/video-worker.js"
 
 [vars]
-# CUSTOM_API_URL = "https://api.klingai.com"
+# API_BASE_URL = "https://api.klingai.com"
 # API_KEY = "your-api-key"
 
-[env.dev]
 [env.production]
+[env.staging]
