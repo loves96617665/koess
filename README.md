@@ -1,6 +1,6 @@
 # 影片生成站 🎬
 
-一個支援 API 輸出的影片生成網站，專為 Cloudflare 部署設計。
+一個支援 API 輸出的影片生成網站，支援 Cloudflare Pages 部署。
 
 ## ✨ 功能特性
 
@@ -9,24 +9,6 @@
 - **完整參數**：支援解析度、幀率、風格、持續時間等設定
 - **歷史記錄**：自動保存生成紀錄
 - **本地存儲**：資料存於瀏覽器本地端
-- **Cloudflare 部署**：一鍵部署到 Cloudflare
-
-## 🚀 功能亮目
-
-### 影片參數支援
-- **模型選擇**：多個 AI 影片生成模型
-- **文本描述**：自然語言描述影片內容
-- **持續時間**：2-30 秒可調
-- **解析度**：480p/720p/1080p/4K
-- **幀率**：24/30/60 FPS
-- **風格**：電影、動漫、寫實、插畫、賽博朋克
-
-### 典型影片生成模型
-- Kling-AIGC
-- Seedance 1.5
-- OpenAI Sora (概念稿)
-- ModelScope VideoGen
-- 其他開放模型
 
 ## 📁 專案結構
 
@@ -35,64 +17,69 @@ video-generator-site/
 ├── index.html          # 前端介面
 ├── app.js              # 前端邏輯與 API 客戶端
 ├── style.css           # 美觀樣式
-├── functions/
-│   └── api.js          # Cloudflare Workers 後端代理
 ├── package.json        # npm 套件配置
-└── wrangler.toml       # Cloudflare Workers 配置
+├── wrangler.toml       # Cloudflare 部署配置
+├── deploy.sh           # 部署腳本
+└── README.md           # 說明文件
 ```
+
+## 🚀 部署到 Cloudflare Pages
+
+### 方法 1：使用命令行部署
+
+```bash
+# 1. 安裝 Wrangler
+npm install -g wrangler
+
+# 2. 登入 Cloudflare
+wrangler login
+
+# 3. 部署
+npx wrangler pages deploy .
+```
+
+### 方法 2：使用 GitHub Actions
+
+1. 把專案推到 GitHub
+2. 在 Cloudflare Dashboard 創建新的 Pages
+3. 連接 GitHub 倉庫
+4. 設定构建設定：
+   - Build command: `bash deploy.sh`
+   - Build directory: `public`
+
+### 方法 3：直接上傳
+
+1. 壓縮 `public/` 目錄下的檔案
+2. 上傳到 Cloudflare Pages
 
 ## 🛠️ 本地測試
 
-### 方法 1：直接開啟
 ```bash
-# 雙擊 index.html 在瀏覽器中開啟
-```
-
-### 方法 2：使用 HTTP 伺服器
-```bash
-# 使用 Python
+# 使用 Python 簡單伺服器
 python -m http.server 8000
+
+# 或使用 Node.js
+npx serve .
 
 # 然後訪問 http://localhost:8000
 ```
 
-## 🚀 部署到 Cloudflare
+## 🔧 如何設定 API 端點
 
-### 前置步驟
-1. 安裝 Wrangler CLI
-```bash
-npm install -g wrangler
+打開 `app.js` 檔案，找到 `API_CONFIG` 變數：
+
+```javascript
+const API_CONFIG = {
+    baseEndpoints: {
+        'kling-v1': 'https://api.klingai.com/v1',
+        'seedance': 'https://api.seedance.tech/v1',
+        'openai-sora': 'https://api.openai.com/v1',
+        'custom': '' // 自訂端點
+    }
+};
 ```
 
-2. 登入 Cloudflare
-```bash
-wrangler login
-```
-
-### 部署步驟
-
-```bash
-# 1. 安裝依賴
-npm install
-
-# 2. 預覽測試
-npm run preview
-
-# 3. 部署到 Cloudflare Pages (前端)
-npm run deploy
-
-# 或者使用 Wrangler 部署 Workers
-wrangler deploy
-```
-
-### 環境變數設定
-
-在 Cloudflare Dashboard 中設定以下變數：
-
-| 變數名稱 | 說明 | 範例 |
-|---------|------|------|
-| CUSTOM_API_URL | API 端點 | https://api.klingai.com |
-| API_KEY | API 金鑰 | your-api-key-here |
+根據你發現的實際 API，修改對應的端點！
 
 ## 📋 使用說明
 
@@ -103,17 +90,16 @@ wrangler deploy
 5. 等待生成完成
 6. 檢視結果並下載
 
-## 🔄 API 整合
+## 🔄 API 格式
 
-### 請求格式 (POST)
+### 請求格式
 ```json
 {
   "model": "kling-v1",
   "prompt": "一位科學家在實驗室發現新能源...",
   "duration": 8,
   "resolution": "1080p",
-  "fps": 30,
-  "style": "cinematic"
+  "fps": 30
 }
 ```
 
@@ -135,17 +121,13 @@ wrangler deploy
 }
 ```
 
-## 🔧 常見問題
+## 🎯 下一步
 
-### Q: 需要 API 金鑰嗎？
-A: 大多數模型需要，你可以在表單右上角輸入。
+請觀察 https://h3video.haizhuapi.bond 網站：
+1. 按 F12 開發者工具
+2. Network → XHR 選擇 XHR 過濾
+3. 執行一個影片生成操作
+4. 找到對應的請求
+5. 貼出 Request URL 和 Payload 給我
 
-### Q: 影片生成多久？
-A: 通常 10-60 秒不等，取決於模型和客戶端負載。
-
-### Q: 可以批量生成嗎？
-A: 可以使用 Workers API 進行批量處理。
-
-## 📄 授權
-
-MIT 授權
+我會幫你更新 `app.js`，使其能正確對接那個 API！
